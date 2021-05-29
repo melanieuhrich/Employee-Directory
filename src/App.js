@@ -1,35 +1,40 @@
 import React from 'react';
-import FriendCard from './components/FriendCard';
+import EmployeeCard from './components/EmployeeCard';
 import Wrapper from './components/Wrapper';
 import Title from './components/Title';
-import friends from './friends.json';
+import API from "./utils/API";
 
 class App extends React.Component {
   state = {
-    friends: friends,
+    employees: [],
   }
 
-  removeFriend = (id) => {
-    const friends = this.state.friends.filter(friend => friend.id !== id);
+  componentDidMount() {
+    this.populateTable()
+  }
 
-    this.setState({
-      friends: friends,
-    })
+  populateTable = () => {
+    API.populate()
+      .then(res => {
+        console.log(res);
+        this.setState({ employees: res.data.results })
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
     return (
       <Wrapper>
-        <Title>Friends List</Title>
-        {this.state.friends.map(friend => (
-          <FriendCard
-            id={friend.id}
-            key={friend.id} // not a prop
-            name={friend.name}
-            image={friend.image}
-            occupation={friend.occupation}
-            location={friend.location}
-            removeFriend={this.removeFriend}
+        <Title>Employee List</Title>
+        {this.state.employees.map(employee => (
+          <EmployeeCard
+            id={employee.id}
+            key={employee.id} // not a prop
+            name={employee.name} // fix
+            image={employee.image} // fix
+            email={employee.email}
+            phone={employee.phone}
+            dob={employee.dob} // fix
           />
         ))}
       </Wrapper>
@@ -70,3 +75,8 @@ export default App;
 
 // const newAnimals = animals.map(animal => animal.toUpperCase())
 
+// Filtering through the users (aka searching by name)
+// Activity 17 of the react week
+
+// Sorting
+// google how to sort array by property in object (flaviocopes.com)
