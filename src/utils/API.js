@@ -1,11 +1,13 @@
 import axios from "axios";
 
-const BASEURL = "https://randomuser.me/api/?results=5";
+const BASEURL = "https://randomuser.me/api/?results=500&nat=US";
 
 const API = {
-    populate: function() {
+    populate: function () {
         return axios.get(BASEURL);
-    }
+    } 
 };
+
+
 
 export default API;

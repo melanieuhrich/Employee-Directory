@@ -2,47 +2,72 @@ import React from 'react';
 import EmployeeCard from './components/EmployeeCard';
 import Wrapper from './components/Wrapper';
 import Title from './components/Title';
+import Form from './components/Form'
+import Button from './components/SortButton';
 import API from "./utils/API";
 
 class App extends React.Component {
   state = {
     employees: [],
-  }
+    search: '',
+    filteredEmployees: []
+  };
 
   componentDidMount() {
     this.populateTable()
-  }
+  };
 
   populateTable = () => {
     API.populate()
       .then(res => {
-        console.log(res);
-        this.setState({ employees: res.data.results })
+        console.log(res.data.results[0]);
+        this.setState({ 
+          employees: res.data.results,
+          filteredEmployees: res.data.results
+         })
       })
       .catch(err => console.log(err));
+  };
+
+  handleInputChange = event => {
+    const value = event.target.value;
+    const name = event.target.name;
+    const filteredEmployees = this.state.employees.filter(employee => employee.name.first.toLowerCase().startsWith(value.toLowerCase()) || employee.name.last.toLowerCase().startsWith(value.toLowerCase()));
+    this.setState({
+      [name]: value,
+      filteredEmployees: filteredEmployees
+    });
+  };
+
+  sort = () => {
+    const employees = this.state.employees.sort((a, b) => (`${a.name.first} ${a.name.last}`>`${b.name.first} ${b.name.last}`) ? 1: -1);
+    this.setState({ filteredEmployees: employees });
   }
 
   render() {
     return (
       <Wrapper>
+        <Form handleInputChange={this.handleInputChange} value={this.state.search} />
+        <Button sort={this.sort} />
         <Title>Employee List</Title>
-        {this.state.employees.map(employee => (
+        {this.state.filteredEmployees.map(employee => (
           <EmployeeCard
-            id={employee.id}
-            key={employee.id} // not a prop
-            name={employee.name} // fix
-            image={employee.image} // fix
+            id={employee.login.uuid}
+            key={employee.login.uuid} // not a prop
+            name={ `${employee.name.first} ${employee.name.last}` } // fix
+            image={employee.picture.medium} // fix
             email={employee.email}
             phone={employee.phone}
-            dob={employee.dob} // fix
+            dob={employee.dob.date} // fix
           />
         ))}
       </Wrapper>
     );
-  }
+  };
 }
 
 export default App;
+
 
 // Class Component
 // - manages state
@@ -75,8 +100,9 @@ export default App;
 
 // const newAnimals = animals.map(animal => animal.toUpperCase())
 
-// Filtering through the users (aka searching by name)
-// Activity 17 of the react week
+
 
 // Sorting
 // google how to sort array by property in object (flaviocopes.com)
+
+
