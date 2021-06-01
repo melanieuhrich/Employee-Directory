@@ -1,5 +1,6 @@
 import React from 'react';
-import EmployeeCard from './components/EmployeeCard';
+import TableHeading from './components/TableHeading';
+import EmployeeTable from './components/EmployeeTable';
 import Wrapper from './components/Wrapper';
 import Title from './components/Title';
 import Form from './components/Form'
@@ -20,7 +21,6 @@ class App extends React.Component {
   populateTable = () => {
     API.populate()
       .then(res => {
-        console.log(res.data.results[0]);
         this.setState({ 
           employees: res.data.results,
           filteredEmployees: res.data.results
@@ -47,15 +47,16 @@ class App extends React.Component {
   render() {
     return (
       <Wrapper>
+        <Title>Employee Directory</Title>
         <Form handleInputChange={this.handleInputChange} value={this.state.search} />
         <Button sort={this.sort} />
-        <Title>Employee List</Title>
+        <TableHeading />
         {this.state.filteredEmployees.map(employee => (
-          <EmployeeCard
+          <EmployeeTable
             id={employee.login.uuid}
             key={employee.login.uuid} // not a prop
-            name={ `${employee.name.first} ${employee.name.last}` } // fix
-            image={employee.picture.medium} // fix
+            name={ `${employee.name.first} ${employee.name.last}` } 
+            image={employee.picture.medium} 
             email={employee.email}
             phone={employee.phone}
             dob={employee.dob.date} // fix

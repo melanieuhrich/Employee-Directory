@@ -1,24 +1,29 @@
-// import React, { Component } from "react";
-import "./style.css";
+import React from "react";
 
 function Form(props) {
     return (
-      <form>
-        <div className="form-group">
-          <label htmlFor="search">Search:</label>
-          <input
-            onChange={props.handleInputChange}
-            value={props.value}
-            name="search"
-            type="text"
-            className="form-control"
-            placeholder="Search by name"
-            id="search"
-          />
-          <br />
+        <div className="container">
+            <div className="row"> 
+                <div className="input-group mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search By Name"
+                        aria-label="Recipient's username"
+                        aria-describedby="button-addon2"
+                        onChange={props.handleInputChange}
+                        value={props.value}
+                        name="search"
+                        id="search" />
+                    <button
+                        className="btn btn-dark"
+                        type="button" id="button-addon2">
+                        Search
+        </button>
+                </div>
+            </div>
         </div>
-      </form>
     );
-  }
+}
 
 export default Form;
